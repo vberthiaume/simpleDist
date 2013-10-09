@@ -1,0 +1,7 @@
+This is a simple distortion plug-in. To install source code on your pc:
+
+-unpack to the location of your choice
+-you need to get the vst2.4 source files from steinberg. Copy the "vstsdk2.4" folder at the same level as the "simpleDist" folder.
+-i use the VSTHost (http://www.hermannseib.com/english/vsthost.htm) for debugging. if you want to use it too, put your vsthostx86 folder at the same level as the "simpleDist" folder.
+-get visual studio and open "simpleDist\win\simpleDist.sln"
+-enjoy!
