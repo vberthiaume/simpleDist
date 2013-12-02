@@ -61,7 +61,7 @@ void SimpleDist::setParameter (VstInt32 index, float value)
 			m_fGain = value;
 			break;
 		case 1: 
-			m_fDist = -.0999f * value + .1f;//value*100;
+			m_fDist = value*100;//-.0999f * value + .1f;
 			break;
 		default: //throw some exception
 			break;
@@ -75,7 +75,7 @@ float SimpleDist::getParameter (VstInt32 index)
 		case 0:
 			return m_fGain;
 		case 1: 
-			return -(m_fDist-.1f)/.0999f; //m_fDist/100;
+			return m_fDist/100;//-(m_fDist-.1f)/.0999f;
 		default:
 			return -1;
 	}
@@ -105,7 +105,7 @@ void SimpleDist::getParameterDisplay (VstInt32 index, char* text)
 			dB2string (m_fGain, text, kVstMaxParamStrLen);
 			break;
 		case 1: 
-			float2string (-100*(m_fDist-.1f)/.0999f, text, kVstMaxParamStrLen);
+			float2string (m_fDist, text, kVstMaxParamStrLen);//(-100*(m_fDist-.1f)/.0999f, text, kVstMaxParamStrLen);
 			break;
 		default:
 			//throw some exception
@@ -159,7 +159,7 @@ VstInt32 SimpleDist::getVendorVersion ()
 
 template<class T> T SimpleDist::sign(T &v)
 {
-	return v > 0 ? 1.f : (v < 0 ? -1.f : 0.f);
+	return v > 0.0 ? 1.0 : (v < 0.0 ? -1.0 : 0.0);
 }
 
 
@@ -167,8 +167,10 @@ template<class T> T SimpleDist::sign(T &v)
 void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
 {
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame){
-		overdriveSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
-		overdriveSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
+		//overdriveSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
+		//overdriveSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
+		distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
+		distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
 	}
 }
 
@@ -176,8 +178,10 @@ void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sam
 void SimpleDist::processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames)
 {
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame){
-		overdriveSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
-		overdriveSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
+		//overdriveSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
+		//overdriveSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
+		distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
+		distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
 	}
 }
 
@@ -187,10 +191,10 @@ template<class T> void SimpleDist::overdriveSingleChannel(T &p_in, T &p_out)
 {
 	//safely cast parameters to avoid problems	
 	T gain = static_cast<T> (m_fGain);
-	T dist = static_cast<T> (m_fDist);
+	T dist = 1.0;//static_cast<T> (m_fDist);
 
 	//mix goes with the gain param for now, but need to implement its own parameter
-	T mix = gain;
+	//T mix = gain;
 	
 	//save original frame value
 	T originalFrame = p_in * gain;
@@ -212,24 +216,26 @@ template<class T> void SimpleDist::overdriveSingleChannel(T &p_in, T &p_out)
 		if (originalFrame < 0) p_out = gain * -( 3- pow((2-abs(originalFrame)*3), 2) )/3;
 	}
 
-	p_out = mix * p_out + (1-mix)* originalFrame;
+	//p_out = mix * p_out + (1-mix)* originalFrame;
 }
 
 //****************** distortion as per p. 144 DAFX 2ed ******************
-//so far this does not seem to change the input at all
 template<class T> void SimpleDist::distortionSingleChannel(T &p_in, T &p_out) {
 	
-		T originalFrame	= p_in			 * static_cast<T> (m_fGain) ;
-		T q					= originalFrame * static_cast<T> (m_fDist);
+		//mix is simply the distortion param 
+		T mix = static_cast<T> (m_fDist);	//should vary from 0 to 1
 
-		T mix = 1.;
+		//amplified original sample
+		T q	= p_in * static_cast<T> (m_fGain);
+
+		//distorted sample
 		T distortedSample = sign(q)*(1-exp(-abs(q)));
 
-		//output is combination of distorted and original frames
-		p_out = mix * distortedSample + (1-mix) * originalFrame;
-		
+		//output is combination of distorted and original samples
+		p_out = mix * distortedSample + (1-mix) * q;
+				
 }
 
-template<class T> void SimpleDist::singleChannelBypass(T &input, T &output){
+template<class T> void SimpleDist::bypassSingleChannel(T &input, T &output){
 		output = input;
 }

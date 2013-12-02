@@ -52,7 +52,7 @@ protected:
 	template<class T> void overdriveSingleChannel(T &p_in, T &p_out);
 	template<class T> void distortionSingleChannel(T &p_in, T &p_out);
 	
-	template<class T> void singleChannelBypass(T &p_in, T &p_out);
+	template<class T> void bypassSingleChannel(T &p_in, T &p_out);
 
 	float m_fGain;
 	float m_fDist;
