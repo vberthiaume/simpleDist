@@ -61,7 +61,7 @@ void SimpleDist::setParameter (VstInt32 index, float value)
 			m_fGain = value;
 			break;
 		case 1: 
-			m_fDist = value*100;//-.0999f * value + .1f;
+			m_fDist = value*75;//-.0999f * value + .1f;
 			break;
 		default: //throw some exception
 			break;
@@ -75,7 +75,7 @@ float SimpleDist::getParameter (VstInt32 index)
 		case 0:
 			return m_fGain;
 		case 1: 
-			return m_fDist/100;//-(m_fDist-.1f)/.0999f;
+			return m_fDist/75;//-(m_fDist-.1f)/.0999f;
 		default:
 			return -1;
 	}
@@ -105,7 +105,7 @@ void SimpleDist::getParameterDisplay (VstInt32 index, char* text)
 			dB2string (m_fGain, text, kVstMaxParamStrLen);
 			break;
 		case 1: 
-			float2string (m_fDist, text, kVstMaxParamStrLen);//(-100*(m_fDist-.1f)/.0999f, text, kVstMaxParamStrLen);
+			float2string (m_fDist/75, text, kVstMaxParamStrLen);//(-100*(m_fDist-.1f)/.0999f, text, kVstMaxParamStrLen);
 			break;
 		default:
 			//throw some exception
@@ -159,7 +159,7 @@ VstInt32 SimpleDist::getVendorVersion ()
 
 template<class T> T SimpleDist::sign(T &v)
 {
-	return v > 0.0 ? 1.0 : (v < 0.0 ? -1.0 : 0.0);
+	return v > 0 ? 1.f : (v < 0 ? -1.f : 0.f);
 }
 
 
@@ -222,17 +222,29 @@ template<class T> void SimpleDist::overdriveSingleChannel(T &p_in, T &p_out)
 //****************** distortion as per p. 144 DAFX 2ed ******************
 template<class T> void SimpleDist::distortionSingleChannel(T &p_in, T &p_out) {
 	
-		//mix is simply the distortion param 
-		T mix = static_cast<T> (m_fDist);	//should vary from 0 to 1
+	//clip limit
+	T clipLimit = .999f;
+		
+	//mix is simply the distortion param 
+	T mix = static_cast<T> (m_fDist);	
 
-		//amplified original sample
-		T q	= p_in * static_cast<T> (m_fGain);
+	//amplified original sample 
+	T q	= p_in * static_cast<T> (m_fGain);
 
-		//distorted sample
-		T distortedSample = sign(q)*(1-exp(-abs(q)));
+	//distorted sample
+	T distortedSample = sign(q)*(1-exp(-abs(q)));
 
-		//output is combination of distorted and original samples
-		p_out = mix * distortedSample + (1-mix) * q;
+	//output is combination of distorted and original samples
+	p_out = mix * distortedSample + (1-mix) * q;
+
+
+	//so this works, DAWs do not clip, but the problem is that we're handling some of the distortion here too... 
+	//so lowering the gain removes some of the distortion instead of just making the volume softer. 
+	//what we'd need is do something like detect the clip then proportionally reduce the gain of the two elements above
+	if (abs(p_out) > clipLimit){
+		if (p_out > 0) p_out = clipLimit; 
+		if (p_out < 0) p_out = clipLimit;
+	}
 				
 }
 
