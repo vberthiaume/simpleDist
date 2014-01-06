@@ -46,14 +46,6 @@ public:
 
 protected:
 	
-	template <class T> T sign(T &v);
-
-	//template function used to apply overdrive on single channels in both processReplacing and processDoubleReplacing
-	template<class T> void overdriveSingleChannel(T &p_in, T &p_out);
-	template<class T> void distortionSingleChannel(T &p_in, T &p_out);
-	
-	template<class T> void bypassSingleChannel(T &p_in, T &p_out);
-
 	float m_fGain;
 	float m_fDist;
 	char programName[kVstMaxProgNameLen + 1];

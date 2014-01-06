@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simpleDist", "simpleDist.vcxproj", "{59248302-52E0-4CC0-9BBE-E475BA4A9B41}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bmp4AudioLibrary", "..\..\bmp4AudioLibrary\bmp4AudioLibrary.vcxproj", "{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,12 @@ Global
 		{59248302-52E0-4CC0-9BBE-E475BA4A9B41}.Release|Win32.Build.0 = Release|Win32
 		{59248302-52E0-4CC0-9BBE-E475BA4A9B41}.Release|x64.ActiveCfg = Release|x64
 		{59248302-52E0-4CC0-9BBE-E475BA4A9B41}.Release|x64.Build.0 = Release|x64
+		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Debug|Win32.Build.0 = Debug|Win32
+		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Debug|x64.ActiveCfg = Debug|Win32
+		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Release|Win32.ActiveCfg = Release|Win32
+		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Release|Win32.Build.0 = Release|Win32
+		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
