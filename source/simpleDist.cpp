@@ -165,21 +165,20 @@ VstInt32 SimpleDist::getVendorVersion ()
 void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
 {
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame){
-		//overdriveSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
-		//overdriveSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
-		bmp4::distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
-		bmp4::distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
+		distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
+		distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
 	}
 }
 
 //-----------------------------------------------------------------------------------------
 void SimpleDist::processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames)
 {
+	double dDist, dGain;
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame){
-		//overdriveSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
-		//overdriveSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
-		bmp4::distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame]);
-		bmp4::distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame]);
+		dDist = static_cast<double> (m_fDist);
+		dGain = static_cast<double> (m_fGain);
+		distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], dDist, dGain);
+		distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], dDist, dGain);
 	}
 }
 
