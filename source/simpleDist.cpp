@@ -159,28 +159,47 @@ VstInt32 SimpleDist::getVendorVersion ()
 }
 
 
-
-
 //-----------------------------------------------------------------------------------------
 void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
 {
-	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame){
-		distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
-		distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
-	}
+	//processReplacingTemplate(inputs, outputs, sampleFrames);
+	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
+	{
+		effectFloat.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
+		effectFloat.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+	} 
 }
 
 //-----------------------------------------------------------------------------------------
 void SimpleDist::processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames)
 {
-	double dDist, dGain;
-	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame){
-		dDist = static_cast<double> (m_fDist);
-		dGain = static_cast<double> (m_fGain);
-		distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], dDist, dGain);
-		distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], dDist, dGain);
-	}
+	//processReplacingTemplate(inputs, outputs, sampleFrames);
+	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
+	{
+		effectDouble.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
+		effectDouble.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+	} 
 }
+
+template <class T> void SimpleDist::processReplacingTemplate(T** inputs, T** outputs, VstInt32 sampleFrames)
+{
+	//static bmp4<T> effect;
+	//if (typeid (inputs) == typeid (effectFloat) ){
+	//	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
+	//	{
+	//		effectFloat.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
+	//		effectFloat.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+	//	} 
+	//} else if (typeid (inputs) == typeid (effectDouble) ) {
+	//	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
+	//	{
+	//		effectDouble.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
+	//		effectDouble.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+	//	} 
+	//}
+}
+
+
 
 
 

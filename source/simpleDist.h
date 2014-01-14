@@ -16,6 +16,8 @@
 #include "../../vstsdk2.4/public.sdk/source/vst2.x/audioeffectx.h"
 #include "../../vstsdk2.4/public.sdk/source/vst2.x/audioeffect.h"
 #include "../../vstsdk2.4/pluginterfaces/vst2.x/aeffect.h"
+#include "bmp4AudioLibrary\bmp4AudioLibrary.h"
+#include "boost\any.hpp"
 
 //-------------------------------------------------------------------------------------------------------
 class SimpleDist : public AudioEffectX
@@ -27,6 +29,7 @@ public:
 	// Processing
 	virtual void processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames);
 	virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
+	template <class T> void processReplacingTemplate(T** inputs, T** outputs, VstInt32 sampleFrames);
 
 	// Program
 	virtual void setProgramName (char* name);
@@ -45,10 +48,13 @@ public:
 	virtual VstInt32 getVendorVersion ();
 
 protected:
-	
 	float m_fGain;
 	float m_fDist;
 	char programName[kVstMaxProgNameLen + 1];
+	//bmp4<boost::any> effect;
+	bmp4<float> effectFloat;
+	bmp4<double> effectDouble;
+
 };
 
 #endif
