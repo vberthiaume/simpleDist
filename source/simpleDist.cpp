@@ -165,8 +165,8 @@ void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sam
 	//processReplacingTemplate(inputs, outputs, sampleFrames);
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
 	{
-		effectFloat.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
-		effectFloat.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+		effectFloat.distortionStereo(inputs[0][iCurFrame], outputs[0][iCurFrame], inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+		effectFloat.delayMonoInput(inputs[0][iCurFrame], outputs[0][iCurFrame], outputs[1][iCurFrame]);
 	} 
 }
 
@@ -176,27 +176,19 @@ void SimpleDist::processDoubleReplacing (double** inputs, double** outputs, VstI
 	//processReplacingTemplate(inputs, outputs, sampleFrames);
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
 	{
-		effectDouble.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
-		effectDouble.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+		effectDouble.distortionStereo(inputs[0][iCurFrame], outputs[0][iCurFrame], inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+		effectDouble.delayMonoInput(inputs[0][iCurFrame], outputs[0][iCurFrame], outputs[1][iCurFrame]);
 	} 
 }
 
 template <class T> void SimpleDist::processReplacingTemplate(T** inputs, T** outputs, VstInt32 sampleFrames)
 {
-	//static bmp4<T> effect;
-	//if (typeid (inputs) == typeid (effectFloat) ){
-	//	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
-	//	{
-	//		effectFloat.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
-	//		effectFloat.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
-	//	} 
-	//} else if (typeid (inputs) == typeid (effectDouble) ) {
-	//	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
-	//	{
-	//		effectDouble.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
-	//		effectDouble.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
-	//	} 
-	//}
+	/*for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
+	{
+		effect.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
+		effect.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+	}*/
+
 }
 
 
