@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bmp4AudioLibrary", "..\..\b
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "templateTest", "..\templateTest\templateTest.vcxproj", "{2EEDC12B-D780-4FA4-84FB-D38853F288AC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "adelay", "..\..\..\Documents\sdks\steinberg\vstsdk2.4\public.sdk\samples\vst2.x\adelay\win\adelay.vcxproj", "{6503B2E8-BC8D-4D80-809C-D43694296419}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -35,6 +37,14 @@ Global
 		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Release|Win32.ActiveCfg = Release|Win32
 		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Release|Win32.Build.0 = Release|Win32
 		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Release|x64.ActiveCfg = Release|Win32
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Debug|Win32.Build.0 = Debug|Win32
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Debug|x64.ActiveCfg = Debug|x64
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Debug|x64.Build.0 = Debug|x64
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Release|Win32.ActiveCfg = Release|Win32
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Release|Win32.Build.0 = Release|Win32
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Release|x64.ActiveCfg = Release|x64
+		{6503B2E8-BC8D-4D80-809C-D43694296419}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

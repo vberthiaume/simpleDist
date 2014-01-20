@@ -17,7 +17,17 @@
 #include "../../vstsdk2.4/public.sdk/source/vst2.x/audioeffect.h"
 #include "../../vstsdk2.4/pluginterfaces/vst2.x/aeffect.h"
 #include "bmp4AudioLibrary\bmp4AudioLibrary.h"
-#include "boost\any.hpp"
+
+enum 
+{
+	// Parameters Tags
+	kGain = 0,
+	kDist,
+	kDelay,
+	kFeedBack,
+
+	kNumParams
+};
 
 //-------------------------------------------------------------------------------------------------------
 class SimpleDist : public AudioEffectX
@@ -48,14 +58,21 @@ public:
 	virtual VstInt32 getVendorVersion ();
 
 protected:
-	float m_fGain;
-	float m_fDist;
 	char programName[kVstMaxProgNameLen + 1];
+	
+	//effect library objects
 	bmp4<float> effectFloat;
 	bmp4<double> effectDouble;
-
-
 	//bmp4<boost::any> effect;  //TODO: to be truly generic , we should use boost::any or something like that.
+
+	//distortion parameters
+	float m_fGain;
+	float m_fDist;
+
+	//delay parameters
+	long m_lDelay;
+	//float m_fDelay;
+	float m_fFeedBack;
 };
 
 #endif

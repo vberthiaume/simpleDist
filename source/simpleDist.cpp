@@ -14,7 +14,6 @@
 #include "math.h"
 #include "stdlib.h"
 #include "bmp4AudioLibrary\bmp4AudioLibrary.h"
-#include "boost\any.hpp"
 
 //-------------------------------------------------------------------------------------------------------
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
@@ -24,7 +23,7 @@ AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
 
 //-------------------------------------------------------------------------------------------------------
 SimpleDist::SimpleDist (audioMasterCallback audioMaster)
-: AudioEffectX (audioMaster, 1, 2)	// 1 program, 1 parameter only
+: AudioEffectX (audioMaster, 1, 4)	// 1 program, 4 parameters
 {
 	setNumInputs (2);		// stereo in
 	setNumOutputs (2);		// stereo out
@@ -32,10 +31,18 @@ SimpleDist::SimpleDist (audioMasterCallback audioMaster)
 	canProcessReplacing ();	// supports replacing output
 	canDoubleReplacing ();	// supports double precision processing
 
+	//distortion parameters
 	m_fGain = 1.f;			// default to 0 dB
 	m_fDist = .1f;			
+
+	//delay parameters
+	m_lDelay = 0;
+	m_fFeedBack = 0;
+	
+
 	vst_strncpy (programName, "Default", kVstMaxProgNameLen);	// default program name
 }
+
 
 //-------------------------------------------------------------------------------------------------------
 SimpleDist::~SimpleDist ()
@@ -59,14 +66,22 @@ void SimpleDist::getProgramName (char* name)
 void SimpleDist::setParameter (VstInt32 index, float value)
 {
 	switch (index){
-		case 0:
-			m_fGain = value;
-			break;
-		case 1: 
-			m_fDist = value*75;//-.0999f * value + .1f;
-			break;
-		default: //throw some exception
-			break;
+	case kGain:
+		m_fGain = value;
+		break;
+	case kDist:
+		m_fDist = value*75; 
+		break;
+	case kDelay:
+		m_lDelay = (long)(value * (44100.f - 1.f));
+		break;
+	case kFeedBack:
+		m_fFeedBack = value;
+		break;
+
+	default: 
+		//throw some exception
+		break;
 	}
 }
 
@@ -74,12 +89,18 @@ void SimpleDist::setParameter (VstInt32 index, float value)
 float SimpleDist::getParameter (VstInt32 index)
 {
 	switch (index){
-		case 0:
-			return m_fGain;
-		case 1: 
-			return m_fDist/75;//-(m_fDist-.1f)/.0999f;
-		default:
-			return -1;
+	case kGain:
+		return m_fGain;
+	case kDist: 
+		return m_fDist/75;
+	case kDelay:
+		return static_cast<float> (m_lDelay / (44100.f - 1.f));
+		break;
+	case kFeedBack:
+		return m_fFeedBack;
+		break;
+	default:
+		return -1;
 	}
 }
 
@@ -87,15 +108,21 @@ float SimpleDist::getParameter (VstInt32 index)
 void SimpleDist::getParameterName (VstInt32 index, char* label)
 {
 	switch (index){
-		case 0:
-			vst_strncpy (label, "Gain", kVstMaxParamStrLen);
-			break;
-		case 1: 
-			vst_strncpy (label, "Distortion", kVstMaxParamStrLen);
-			break;
-		default:
-			//throw some exception
-			break;
+	case 0:
+		vst_strncpy (label, "Gain", kVstMaxParamStrLen);
+		break;
+	case 1: 
+		vst_strncpy (label, "Distortion", kVstMaxParamStrLen);
+		break;
+	case kDelay:
+		vst_strncpy (label, "Delay", kVstMaxParamStrLen);
+		break;
+	case kFeedBack:
+		vst_strncpy (label, "Delay feedback", kVstMaxParamStrLen);
+		break;
+	default:
+		//throw some exception
+		break;
 	}
 }
 
@@ -103,15 +130,21 @@ void SimpleDist::getParameterName (VstInt32 index, char* label)
 void SimpleDist::getParameterDisplay (VstInt32 index, char* text)
 {
 	switch (index){
-		case 0:
-			dB2string (m_fGain, text, kVstMaxParamStrLen);
-			break;
-		case 1: 
-			float2string (m_fDist/75, text, kVstMaxParamStrLen);//(-100*(m_fDist-.1f)/.0999f, text, kVstMaxParamStrLen);
-			break;
-		default:
-			//throw some exception
-			break;
+	case kGain:
+		dB2string (m_fGain, text, kVstMaxParamStrLen);
+		break;
+	case kDist: 
+		float2string (m_fDist/75, text, kVstMaxParamStrLen);
+		break;
+	case kDelay:
+		float2string (static_cast<float> (m_lDelay / (44100.f - 1.f)), text, kVstMaxParamStrLen);
+		break;
+	case kFeedBack:
+		float2string (m_fFeedBack, text, kVstMaxParamStrLen);
+		break;
+	default:
+		//throw some exception
+		break;
 	}
 }
 
@@ -120,15 +153,21 @@ void SimpleDist::getParameterLabel (VstInt32 index, char* label)
 {
 	
 	switch (index){
-		case 0:
-			vst_strncpy (label, "dB", kVstMaxParamStrLen);
-			break;
-		case 1: 
-			vst_strncpy (label, "%", kVstMaxParamStrLen);
-			break;
-		default:
-			//throw some exception
-			break;
+	case kGain:
+		vst_strncpy (label, "dB", kVstMaxParamStrLen);
+		break;
+	case kDist: 
+		vst_strncpy (label, "%", kVstMaxParamStrLen);
+		break;
+	case kDelay:
+		vst_strncpy (label, "%", kVstMaxParamStrLen);
+		break;
+	case kFeedBack:
+		vst_strncpy (label, "%", kVstMaxParamStrLen);
+		break;
+	default:
+		//throw some exception
+		break;
 	}
 }
 
@@ -166,7 +205,7 @@ void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sam
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
 	{
 		effectFloat.distortionStereo(inputs[0][iCurFrame], outputs[0][iCurFrame], inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
-		effectFloat.delayMonoInput(inputs[0][iCurFrame], outputs[0][iCurFrame], outputs[1][iCurFrame]);
+		effectFloat.delayMonoInput(inputs[0][iCurFrame], outputs[0][iCurFrame], outputs[1][iCurFrame], m_lDelay, m_fFeedBack);
 	} 
 }
 
@@ -176,7 +215,7 @@ void SimpleDist::processDoubleReplacing (double** inputs, double** outputs, VstI
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
 	{
 		effectDouble.distortionStereo(inputs[0][iCurFrame], outputs[0][iCurFrame], inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
-		effectDouble.delayMonoInput(inputs[0][iCurFrame], outputs[0][iCurFrame], outputs[1][iCurFrame]);
+		effectDouble.delayMonoInput(inputs[0][iCurFrame], outputs[0][iCurFrame], outputs[1][iCurFrame], m_lDelay, m_fFeedBack);
 	} 
 }
 
