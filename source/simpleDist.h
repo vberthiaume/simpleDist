@@ -29,7 +29,7 @@ public:
 	// Processing
 	virtual void processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames);
 	virtual void processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames);
-	template <class T> void processReplacingTemplate(T** inputs, T** outputs, VstInt32 sampleFrames);
+	//stemplate <class T> void processReplacingTemplate(T** inputs, T** outputs, VstInt32 sampleFrames);
 
 	// Program
 	virtual void setProgramName (char* name);
@@ -51,10 +51,11 @@ protected:
 	float m_fGain;
 	float m_fDist;
 	char programName[kVstMaxProgNameLen + 1];
-	//bmp4<boost::any> effect;
 	bmp4<float> effectFloat;
 	bmp4<double> effectDouble;
 
+
+	//bmp4<boost::any> effect;  //TODO: to be truly generic , we should use boost::any or something like that.
 };
 
 #endif

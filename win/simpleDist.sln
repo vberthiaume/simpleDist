@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simpleDist", "simpleDist.vc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bmp4AudioLibrary", "..\..\bmp4AudioLibrary\bmp4AudioLibrary.vcxproj", "{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "templateTest", "..\templateTest\templateTest.vcxproj", "{2EEDC12B-D780-4FA4-84FB-D38853F288AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,12 @@ Global
 		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Release|Win32.ActiveCfg = Release|Win32
 		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Release|Win32.Build.0 = Release|Win32
 		{44126F49-BFEB-41A8-9D1E-67C9ED9742DD}.Release|x64.ActiveCfg = Release|Win32
+		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Debug|Win32.Build.0 = Debug|Win32
+		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Debug|x64.ActiveCfg = Debug|Win32
+		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Release|Win32.ActiveCfg = Release|Win32
+		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Release|Win32.Build.0 = Release|Win32
+		{2EEDC12B-D780-4FA4-84FB-D38853F288AC}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

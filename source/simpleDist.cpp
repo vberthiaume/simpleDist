@@ -14,6 +14,7 @@
 #include "math.h"
 #include "stdlib.h"
 #include "bmp4AudioLibrary\bmp4AudioLibrary.h"
+#include "boost\any.hpp"
 
 //-------------------------------------------------------------------------------------------------------
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
@@ -162,7 +163,6 @@ VstInt32 SimpleDist::getVendorVersion ()
 //-----------------------------------------------------------------------------------------
 void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames)
 {
-	//processReplacingTemplate(inputs, outputs, sampleFrames);
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
 	{
 		effectFloat.distortionStereo(inputs[0][iCurFrame], outputs[0][iCurFrame], inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
@@ -173,7 +173,6 @@ void SimpleDist::processReplacing (float** inputs, float** outputs, VstInt32 sam
 //-----------------------------------------------------------------------------------------
 void SimpleDist::processDoubleReplacing (double** inputs, double** outputs, VstInt32 sampleFrames)
 {
-	//processReplacingTemplate(inputs, outputs, sampleFrames);
 	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
 	{
 		effectDouble.distortionStereo(inputs[0][iCurFrame], outputs[0][iCurFrame], inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
@@ -181,15 +180,15 @@ void SimpleDist::processDoubleReplacing (double** inputs, double** outputs, VstI
 	} 
 }
 
-template <class T> void SimpleDist::processReplacingTemplate(T** inputs, T** outputs, VstInt32 sampleFrames)
-{
-	/*for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame)
-	{
-		effect.distortionSingleChannel(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
-		effect.distortionSingleChannel(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
-	}*/
-
-}
+//TODO: processReplacingTemplate should be called in both processReplacing and processReplacingTemplate in a truly generic case
+//template <class T> void SimpleDist::processReplacingTemplate(T** inputs, T** outputs, VstInt32 sampleFrames)
+//{
+//	for (int iCurFrame = 0; iCurFrame < sampleFrames; ++iCurFrame) {
+//		effect.distortionMono(inputs[0][iCurFrame], outputs[0][iCurFrame], m_fDist, m_fGain);
+//		effect.distortionMono(inputs[1][iCurFrame], outputs[1][iCurFrame], m_fDist, m_fGain);
+//	}
+//
+//}
 
 
 
